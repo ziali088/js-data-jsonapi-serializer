@@ -1,0 +1,13 @@
+--require core-js/stable
+--require regenerator-runtime/runtime
+--require @babel/register
+--require env-test
+--recursive
+--sort
+--ui bdd
+--full-trace
+--inline-diffs
+
+# exit is needed for event loops to exit
+# when testing with promises
+--exit
