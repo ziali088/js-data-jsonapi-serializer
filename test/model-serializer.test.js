@@ -1,21 +1,18 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import { JSONAPIRecord } from '../dist';
 
 describe('JSONAPI Model Serializer', () => {
-  const recordStub = function(overrides = {}) {
-    return new JSONAPIRecord({
-      specification: {
-        type: 'person',
-        attributes: ['name', 'age', 'gender']
-      },
-      id: 3,
-      name: 'Ali',
-      age: 29,
-      gender: 'male',
-      ...overrides
-    });
-  };
+  const recordStub = (overrides = {}) => new JSONAPIRecord({
+    specification: {
+      type: 'person',
+      attributes: ['name', 'age', 'gender'],
+    },
+    id: 3,
+    name: 'Ali',
+    age: 29,
+    gender: 'male',
+    ...overrides,
+  });
 
   it('can build a resource document', async () => {
     const record = recordStub();
@@ -36,29 +33,17 @@ describe('JSONAPI Model Serializer', () => {
     const relationshipStub = recordStub({
       specification: {
         type: 'organisation',
-        attributes: ['name', 'public_id']
+        attributes: ['name', 'public_id'],
       },
       id: 2,
       name: 'Big Company Ltd',
       public_id: 'bcltd',
-      mapper: sinon.createStubInstance(function() { return { relations: {} } })
+      mapper: {},
     });
-    expect(relationshipStub.id).to.equal(2);
 
     const record = recordStub({
       organisation: relationshipStub,
-      mapper: sinon.createStubInstance(function() {
-        return {
-          relations: {
-            belongsTo: {
-              organisation: {
-                foreignKey: 'organisation_id',
-                localField: 'organisation'
-              },
-            },
-          },
-        };
-      }),
+      mapper: {},
       organisation_id: 2,
     });
 
@@ -102,4 +87,62 @@ describe('JSONAPI Model Serializer', () => {
     });
   });
 
+  it('can build a resource document with hasMany relationship', async () => {
+    const relationshipStub = recordStub({
+      specification: {
+        type: 'child',
+        attributes: ['name', 'age'],
+      },
+      id: 2,
+      name: 'Child',
+      age: 7,
+      mapper: { relations: { belongsTo: { person: {} } } },
+    });
+
+    const record = recordStub({
+      children: [relationshipStub],
+      mapper: { relations: { hasMany: { child: {} } } },
+    });
+
+    const document = record.buildDocument({
+      include: ['children'],
+      baseUrl: 'https://www.example.com',
+    });
+
+    expect(document).to.deep.equal({
+      data: {
+        id: record.id,
+        type: 'people',
+        attributes: {
+          name: record.name,
+          age: record.age,
+          gender: record.gender,
+        },
+        relationships: {
+          children: {
+            links: {
+              self: `https://www.example.com/people/${record.id}/relationships/children`,
+              related: `https://www.example.com/people/${record.id}/children`,
+            },
+            data: [
+              {
+                type: 'children',
+                id: relationshipStub.id,
+              },
+            ],
+          },
+        },
+      },
+      included: [
+        {
+          id: relationshipStub.id,
+          type: 'children',
+          attributes: {
+            name: relationshipStub.name,
+            age: relationshipStub.age,
+          },
+        },
+      ],
+    });
+  });
 });

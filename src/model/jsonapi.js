@@ -15,7 +15,7 @@ class JSONAPIRecord extends Record {
     const valid = ajv.validate(JSONAPIRecord.jsonapiSchema, this.specification);
     if (!valid) {
       throw new Error(
-        `Specification error: ${ajv.errors.map(err => `"${err.schemaPath}" => ${err.message}`).join(', ')}`,
+        `Specification error: ${ajv.errors.map((err) => `"${err.schemaPath}" => ${err.message}`).join(', ')}`,
       );
     }
   }
@@ -70,7 +70,7 @@ class JSONAPIRecord extends Record {
       }
       relationships[relation] = this[_buildRelationshipLinkObject](relation, baseUrl);
       this[_buildRelationshipIncludes](relation, relationOptions).forEach(
-        inc => document.included.push(inc),
+        (inc) => document.included.push(inc),
       );
     });
     document.data.relationships = relationships;
@@ -84,12 +84,12 @@ class JSONAPIRecord extends Record {
       this[relationName].forEach((record) => {
         const document = record.buildDocument(options);
         included.push(document.data);
-        (document.included || []).forEach(include => included.push(include));
+        (document.included || []).forEach((include) => included.push(include));
       });
     } else {
       const document = this[relationName].buildDocument(options);
       included.push(document.data);
-      (document.included || []).forEach(include => included.push(include));
+      (document.included || []).forEach((include) => included.push(include));
     }
     return included;
   }
@@ -104,7 +104,7 @@ class JSONAPIRecord extends Record {
     };
 
     if (this[_isHasManyRelationship](this, relationName)) {
-      const data = relationship.map(relation => ({ type, id: relation.id }));
+      const data = relationship.map((relation) => ({ type, id: relation.id }));
       return { data, links };
     }
 
