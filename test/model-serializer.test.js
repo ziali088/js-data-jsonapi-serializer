@@ -14,6 +14,11 @@ describe('JSONAPI Model Serializer', () => {
     ...overrides,
   });
 
+  it('has the expected properties', async () => {
+    const record = recordStub({ _mapper: { fake: true } });
+    expect(record.mapper).to.deep.equal({ fake: true });
+  });
+
   it('can build a resource document', async () => {
     const record = recordStub();
     expect(record.buildDocument()).to.deep.equal({

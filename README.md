@@ -8,10 +8,6 @@ NPM:
 
 `npm i js-data-jsonapi-serializer`
 
-Yarn:
-
-`yarn add js-data-jsonapi-serializer`
-
 # USAGE
 
 Below you'll find instructions on how to use the classes provided by this
