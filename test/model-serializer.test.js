@@ -38,12 +38,12 @@ describe('JSONAPI Model Serializer', () => {
       id: 2,
       name: 'Big Company Ltd',
       public_id: 'bcltd',
-      mapper: {},
+      _mapper: {},
     });
 
     const record = recordStub({
       organisation: relationshipStub,
-      mapper: {},
+      _mapper: {},
       organisation_id: 2,
     });
 
@@ -96,12 +96,12 @@ describe('JSONAPI Model Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      mapper: { relations: { belongsTo: { person: {} } } },
+      _mapper: { relations: { belongsTo: { person: {} } } },
     });
 
     const record = recordStub({
       children: [relationshipStub],
-      mapper: { relations: { hasMany: { child: {} } } },
+      _mapper: { relations: { hasMany: { child: {} } } },
     });
 
     const document = record.buildDocument({

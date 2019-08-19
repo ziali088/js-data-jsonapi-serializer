@@ -63,13 +63,13 @@ describe('JSONAPI Mapper Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      mapper: { relations: { belongsTo: { person: {} } } },
+      _mapper: { relations: { belongsTo: { person: {} } } },
     });
 
     const records = [
       recordStub({
         children: [relationshipStub],
-        mapper,
+        _mapper: mapper
       }),
     ];
 
@@ -131,7 +131,7 @@ describe('JSONAPI Mapper Serializer', () => {
       },
       id: 4,
       name: 'Toy',
-      mapper: { relations: { belongsTo: { child: {} } } },
+      _mapper: { relations: { belongsTo: { child: {} } } },
     });
 
     const relationshipStub = recordStub({
@@ -142,14 +142,14 @@ describe('JSONAPI Mapper Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      mapper: childMapper,
+      _mapper: childMapper,
       toys: [nestedRelationStub],
     });
 
     const records = [
       recordStub({
         children: [relationshipStub],
-        mapper,
+        _mapper: mapper
       }),
     ];
 
