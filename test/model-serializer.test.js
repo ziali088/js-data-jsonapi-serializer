@@ -11,11 +11,12 @@ describe('JSONAPI Model Serializer', () => {
     name: 'Ali',
     age: 29,
     gender: 'male',
+    _mapper() {},
     ...overrides,
   });
 
   it('has the expected properties', async () => {
-    const record = recordStub({ _mapper: { fake: true } });
+    const record = recordStub({ _mapper() { return { fake: true }; } });
     expect(record.mapper).to.deep.equal({ fake: true });
   });
 
@@ -43,12 +44,12 @@ describe('JSONAPI Model Serializer', () => {
       id: 2,
       name: 'Big Company Ltd',
       public_id: 'bcltd',
-      _mapper: {},
+      _mapper() {},
     });
 
     const record = recordStub({
       organisation: relationshipStub,
-      _mapper: {},
+      _mapper() { return { relations: { belongsTo: { organisation: {} } } }; },
       organisation_id: 2,
     });
 
@@ -101,12 +102,12 @@ describe('JSONAPI Model Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      _mapper: { relations: { belongsTo: { person: {} } } },
+      _mapper() { return { relations: { belongsTo: { person: {} } } }; },
     });
 
     const record = recordStub({
       children: [relationshipStub],
-      _mapper: { relations: { hasMany: { child: {} } } },
+      _mapper() { return { relations: { hasMany: { child: {} } } }; },
     });
 
     const document = record.buildDocument({

@@ -21,7 +21,7 @@ class JSONAPIRecord extends Record {
   }
 
   get mapper() {
-    return this._mapper;
+    return this._mapper();
   }
 
   static get jsonapiSchema() {

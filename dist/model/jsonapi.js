@@ -195,7 +195,7 @@ function (_Record) {
   }, {
     key: "mapper",
     get: function get() {
-      return this._mapper;
+      return this._mapper();
     }
   }], [{
     key: "jsonapiSchema",

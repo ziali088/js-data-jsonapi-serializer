@@ -11,6 +11,7 @@ describe('JSONAPI Mapper Serializer', () => {
     name: 'Ali',
     age: 29,
     gender: 'male',
+    _mapper() {},
     ...overrides,
   });
 
@@ -63,13 +64,13 @@ describe('JSONAPI Mapper Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      _mapper: { relations: { belongsTo: { person: {} } } },
+      _mapper() { return { relations: { belongsTo: { person: {} } } }; },
     });
 
     const records = [
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper,
+        _mapper() { return { relations: { hasMany: { child: {} } } }; },
       }),
     ];
 
@@ -116,14 +117,6 @@ describe('JSONAPI Mapper Serializer', () => {
       },
     });
 
-    const childMapper = new JSONAPIMapper({
-      name: 'child',
-      relations: {
-        belongsTo: { person: {} },
-        hasMany: { toy: {} },
-      },
-    });
-
     const nestedRelationStub = recordStub({
       specification: {
         type: 'toy',
@@ -131,7 +124,7 @@ describe('JSONAPI Mapper Serializer', () => {
       },
       id: 4,
       name: 'Toy',
-      _mapper: { relations: { belongsTo: { child: {} } } },
+      _mapper() { return { relations: { belongsTo: { child: {} } } }; },
     });
 
     const relationshipStub = recordStub({
@@ -142,14 +135,14 @@ describe('JSONAPI Mapper Serializer', () => {
       id: 2,
       name: 'Child',
       age: 7,
-      _mapper: childMapper,
+      _mapper() { return { relations: { hasMany: { toy: {} }, belongsTo: { person: {} } } }; },
       toys: [nestedRelationStub],
     });
 
     const records = [
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper,
+        _mapper() { return { relations: { hasMany: { child: {} } } }; },
       }),
     ];
 
@@ -229,11 +222,11 @@ describe('JSONAPI Mapper Serializer', () => {
     const records = [
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper,
+        _mapper() { return { relations: { hasMany: { child: {} } } }; },
       }),
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper,
+        _mapper() { return { relations: { hasMany: { child: {} } } }; },
       }),
     ];
 
