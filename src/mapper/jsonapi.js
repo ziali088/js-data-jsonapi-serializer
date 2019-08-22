@@ -10,7 +10,11 @@ class JSONAPIMapper extends Mapper {
       const document = record.buildDocument(options);
       documents.data.push(document.data);
       if (!_.isEmpty(document.included)) {
-        document.included.forEach((include) => included.push(include));
+        document.included.forEach((include) => {
+          if (!_.find(included, { id: include.id, type: include.type })) {
+            included.push(include);
+          }
+        });
       }
     });
 

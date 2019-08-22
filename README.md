@@ -4,7 +4,7 @@ Adds JSON:API serialization support to JS-Data Record & Mapper objects.
 
 # INSTALLATION
 
-NPM:
+[NPM](https://www.npmjs.com/package/js-data-jsonapi-serializer):
 
 `npm i js-data-jsonapi-serializer`
 

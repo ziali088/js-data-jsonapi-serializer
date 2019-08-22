@@ -69,7 +69,7 @@ describe('JSONAPI Mapper Serializer', () => {
     const records = [
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper
+        _mapper: mapper,
       }),
     ];
 
@@ -149,7 +149,7 @@ describe('JSONAPI Mapper Serializer', () => {
     const records = [
       recordStub({
         children: [relationshipStub],
-        _mapper: mapper
+        _mapper: mapper,
       }),
     ];
 
@@ -201,6 +201,89 @@ describe('JSONAPI Mapper Serializer', () => {
           type: 'toys',
           attributes: {
             name: 'Toy',
+          },
+        },
+      ],
+    });
+  });
+
+  it('does not contain duplicate entries when including relationships', async () => {
+    const mapper = new JSONAPIMapper({
+      name: 'person',
+      relations: {
+        hasMany: { child: {} },
+      },
+    });
+
+    const relationshipStub = recordStub({
+      specification: {
+        type: 'children',
+        attributes: ['name', 'age'],
+      },
+      id: 2,
+      name: 'Child',
+      age: 7,
+      _mapper: { relations: { belongsTo: { person: {} } } },
+    });
+
+    const records = [
+      recordStub({
+        children: [relationshipStub],
+        _mapper: mapper,
+      }),
+      recordStub({
+        children: [relationshipStub],
+        _mapper: mapper,
+      }),
+    ];
+
+    const documents = mapper.buildDocuments(records, { include: ['children'] });
+    expect(documents).to.deep.equal({
+      data: [
+        {
+          id: records[0].id,
+          type: 'people',
+          attributes: {
+            name: records[0].name,
+            age: records[0].age,
+            gender: records[0].gender,
+          },
+          relationships: {
+            children: {
+              links: {
+                self: `/people/${records[0].id}/relationships/children`,
+                related: `/people/${records[0].id}/children`,
+              },
+              data: [{ id: relationshipStub.id, type: 'children' }],
+            },
+          },
+        },
+        {
+          id: records[1].id,
+          type: 'people',
+          attributes: {
+            name: records[1].name,
+            age: records[1].age,
+            gender: records[1].gender,
+          },
+          relationships: {
+            children: {
+              links: {
+                self: `/people/${records[1].id}/relationships/children`,
+                related: `/people/${records[1].id}/children`,
+              },
+              data: [{ id: relationshipStub.id, type: 'children' }],
+            },
+          },
+        },
+      ],
+      included: [
+        {
+          id: relationshipStub.id,
+          type: 'children',
+          attributes: {
+            name: relationshipStub.name,
+            age: relationshipStub.age,
           },
         },
       ],

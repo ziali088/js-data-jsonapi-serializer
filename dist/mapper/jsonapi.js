@@ -54,7 +54,12 @@ function (_Mapper) {
 
         if (!_lodash["default"].isEmpty(document.included)) {
           document.included.forEach(function (include) {
-            return included.push(include);
+            if (!_lodash["default"].find(included, {
+              id: include.id,
+              type: include.type
+            })) {
+              included.push(include);
+            }
           });
         }
       });
