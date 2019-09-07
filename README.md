@@ -164,3 +164,15 @@ The record will include
   Base (or root) URL of your API. Will be used to create link objects for this record in the JSON:API payload.
 
   If not given, the URLs returned will be relative.
+
+# CONTRIBUTION
+
+* Fork the repository
+* `npm install`
+* `npm test`
+* `npm run lint -- --fix`
+
+Once your changes are ready for review, create a pull request.
+
+Author will then merge the pull request and publish changes (`npm version patch` && `npm publish`).
+
