@@ -82,6 +82,13 @@ function (_Record) {
       this.specification.attributes.forEach(function (attr) {
         attributes[attr] = _this2[attr];
       });
+
+      if (this.specification.kebabCaseAttrs) {
+        attributes = _lodash["default"].mapKeys(attributes, function (val, key) {
+          return _lodash["default"].kebabCase(key);
+        });
+      }
+
       var document = {
         data: {
           id: this.id,
@@ -212,6 +219,9 @@ function (_Record) {
               type: 'string'
             },
             uniqueItems: true
+          },
+          kebabCaseAttrs: {
+            type: 'boolean'
           }
         },
         required: ['type', 'attributes']

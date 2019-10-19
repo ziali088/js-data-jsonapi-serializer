@@ -20,6 +20,51 @@ describe('JSONAPI Model Serializer', () => {
     expect(record.mapper).to.deep.equal({ fake: true });
   });
 
+  it('can kebab-case attributes', async () => {
+    const record = recordStub({
+      specification: {
+        type: 'person',
+        attributes: ['name', 'is_active', 'skillSet'],
+        kebabCaseAttrs: true,
+      },
+      is_active: true,
+      skillSet: 'ballin',
+    });
+    expect(record.buildDocument()).to.deep.equal({
+      data: {
+        id: record.id,
+        type: 'people',
+        attributes: {
+          name: record.name,
+          'is-active': true,
+          'skill-set': 'ballin',
+        },
+      },
+    });
+  });
+
+  it('does not kebab-case attributes by default', async () => {
+    const record = recordStub({
+      specification: {
+        type: 'person',
+        attributes: ['name', 'is_active', 'skillSet'],
+      },
+      is_active: true,
+      skillSet: 'ballin',
+    });
+    expect(record.buildDocument()).to.deep.equal({
+      data: {
+        id: record.id,
+        type: 'people',
+        attributes: {
+          name: record.name,
+          is_active: true,
+          skillSet: 'ballin',
+        },
+      },
+    });
+  });
+
   it('can build a resource document', async () => {
     const record = recordStub();
     expect(record.buildDocument()).to.deep.equal({

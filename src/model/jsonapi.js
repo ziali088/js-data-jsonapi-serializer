@@ -38,6 +38,9 @@ class JSONAPIRecord extends Record {
           },
           uniqueItems: true,
         },
+        kebabCaseAttrs: {
+          type: 'boolean',
+        },
       },
       required: ['type', 'attributes'],
     };
@@ -47,8 +50,11 @@ class JSONAPIRecord extends Record {
     const { include } = options;
     const baseUrl = options.baseUrl || '';
 
-    const attributes = {};
+    let attributes = {};
     this.specification.attributes.forEach((attr) => { attributes[attr] = this[attr]; });
+    if (this.specification.kebabCaseAttrs) {
+      attributes = _.mapKeys(attributes, (val, key) => _.kebabCase(key));
+    }
 
     const document = {
       data: {

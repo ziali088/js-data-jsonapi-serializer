@@ -137,13 +137,17 @@ Accessor method for the JS-Data `Record` private property `_mapper`. This is nee
 
 You are required to implement this accessor method. It should return an object with the follow properties:
 
-* type
+* `String` type
 
   The JSON:API type you want this type of record to have.
 
-* attributes
+* `Object` attributes
 
   The attributes to include in the payload for this record.
+
+* `Boolean` kebabCaseAttrs
+
+  When true, all attribute keys will be kebab-cased in the payload.
 
 #### buildDocument(options = {})
 
