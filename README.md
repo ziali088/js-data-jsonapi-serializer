@@ -2,6 +2,13 @@
 
 Adds JSON:API serialization support to JS-Data Record & Mapper objects.
 
+## Deprecated
+
+Hi, I won't be maintaining this package anymore as there's a really cool package that does
+JSON API serialization pretty well already - [json-api-serializer](https://www.npmjs.com/package/json-api-serializer).
+
+Highly recommend using that package instead.
+
 # INSTALLATION
 
 [NPM](https://www.npmjs.com/package/js-data-jsonapi-serializer):
